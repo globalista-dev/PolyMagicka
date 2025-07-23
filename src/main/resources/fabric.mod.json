@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "polymagicka",
+	"version": "${version}",
+	"name": "PolyMagicka",
+	"description": "PolyMagicka is a server-side spellcasting mod",
+	"authors": [
+		"yGlobalista"
+	],
+	"contact": {
+		"homepage": "github.com/globalista-dev",
+		"sources": "github.com/globalista-dev/PolyMagicka"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/polymagicka/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.globalista.polymagicka.PolyMagicka"
+		],
+		"fabric-datagen": [
+			"com.globalista.polymagicka.datagen.Datagen"
+		]
+	},
+	"mixins": [
+		"polymagicka.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.6",
+		"java": ">=21",
+		"fabric-api": "*",
+		"polymer-core": ">=0.7.5",
+		"polymer-resource-pack": ">=0.7.5"
+	}
+}
