@@ -1,6 +1,9 @@
 package com.globalista.polymagicka.spell.effects;
 
-import com.globalista.polymagicka.spell.components.Element;
+import com.globalista.polymagicka.spell.Spell;
+import com.globalista.polymagicka.util.ModRegistry;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -25,6 +28,11 @@ public class SpellEffect {
         ALL_EFFECTS.add(spellEffect);
         return spellEffect;
     }
+
+    public static final Codec<SpellEffect> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.fieldOf("name").forGetter(SpellEffect::getName),
+            StatusEffectInstance.CODEC.fieldOf("effectInstance").forGetter(SpellEffect::getEffectInstance)
+    ).apply(instance, SpellEffect::new));
 
     public String getName() {
         return name;
