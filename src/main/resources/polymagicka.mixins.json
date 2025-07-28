@@ -3,7 +3,7 @@
 	"package": "com.globalista.polymagicka.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+      "LMBInterceptor"
 	],
 	"injectors": {
 		"defaultRequire": 1

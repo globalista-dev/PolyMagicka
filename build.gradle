@@ -20,6 +20,10 @@ fabricApi {
 	}
 }
 
+loom {
+	accessWidenerPath.set(file("src/main/resources/polymagicka.accesswidener"))
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

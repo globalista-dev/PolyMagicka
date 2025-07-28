@@ -1,8 +1,13 @@
 package com.globalista.polymagicka.item;
 
-import com.globalista.polymagicka.spell.Spell;
-import com.globalista.polymagicka.spell.components.SpellDataComponent;
+import com.globalista.polymagicka.gui.DestructionGUI;
+import com.globalista.polymagicka.magic.spell.Spell;
+import com.globalista.polymagicka.magic.components.SpellDataComponent;
+import com.globalista.polymagicka.util.Helper;
 import com.globalista.polymagicka.util.ModRegistry;
+import com.globalista.polymagicka.gui.AlterationGUI;
+import com.globalista.polymagicka.gui.ConjurationGUI;
+import com.globalista.polymagicka.gui.GrimoireGUI;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -37,34 +42,49 @@ public class Wand extends Item implements PolymerItem {
     }
 
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
+
+        ItemStack mainhand = user.getStackInHand(hand);
         ItemStack offhand = user.getOffHandStack();
 
-        // Checks if the offhand item is a Grimoire by using the tag
-        if (offhand.isIn(ModRegistry.GRIMOIRES)) {
+        // Checks if the offhand item is an item that permits casting by using the tag
+        if (offhand.isIn(ModRegistry.PERMITS_CASTING)) {
 
             if(user.isSneaking()) {
                 // If the player is sneaking, the GUI opens
                 world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, 1.0f, 1.0f);
-                buildGui(user, world, hand);
+
+                if(offhand.isIn(ModRegistry.GRIMOIRES)) { GrimoireGUI.buildGui(user, world, hand, this); }
+                else if(offhand.isIn(ModRegistry.ALTERATION_TOMES)) { AlterationGUI.buildGui(user, world, hand, this); }
+                else if(offhand.isIn(ModRegistry.CONJURATION_TOMES)) { ConjurationGUI.buildGui(user, world, hand, this); }
+                else if(offhand.isIn(ModRegistry.DESTRUCTION_TOMES)) { DestructionGUI.buildGUI(user, world, hand, this); }
+                else if(offhand.isIn(ModRegistry.ILLUSION_TOMES)) { buildIllGui(user, world, hand); }
+                else if(offhand.isIn(ModRegistry.RESTORATION_TOMES)) { buildResGui(user, world, hand); }
+
                 return ActionResult.SUCCESS;
             } else {
 
-                Spell spell = this.getCurrentSpell(itemStack);
-                // Casts spell
-                Spell.cast(spell, world, user, hand);
+                if (this.getCurrentSpell(mainhand) != null){
+                    Spell.cast(this.getCurrentSpell(mainhand), world, user, hand);
+                    //user.getItemCooldownManager().set(mainhand, this.getCurrentSpell(mainhand).getCooldown());
+                } else {
+                    System.out.println(Helper.t("error.no.spell"));
+                }
+
 
             }
 
 
         } else {
-            // No Grimoire = no spellcasting
+            // No Grimoire/Tome = no spellcasting
             world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_SNARE.value(), SoundCategory.PLAYERS, 1.0f, 0.5f);
             return ActionResult.FAIL;
         }
-
-
+        return ActionResult.PASS;
     }
 
 
+
+    private void buildIllGui(PlayerEntity playerEntity, World world, Hand hand) {}
+
+    private void buildResGui(PlayerEntity playerEntity, World world, Hand hand) {}
 }
